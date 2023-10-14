@@ -10,6 +10,7 @@ const port = process.env.port || 5000
 app.use(express.json())
 app.use(cors())
 
+//Register
 app.post('/register', async (req, res)=>{
     let user = new User(req.body)
     let result = await user.save()
@@ -19,6 +20,7 @@ app.post('/register', async (req, res)=>{
    res.send(result)   // we can take response from postman by writing res.send(). other method is res.json()
 })
 
+// Login
 app.post('/login', async (req, res)=>{
     if(req.body.email && req.body.password){
         let user = await User.findOne(req.body).select('-password')
@@ -28,12 +30,10 @@ app.post('/login', async (req, res)=>{
             res.send({ message: "No User Found" })
         }
     }else{
-        res.send({ message: "No User Found" })
-    }
-    
-     
+        res.send({ message: "Enter both fields" })
+    }  
 })
-
+    
 app.listen(port, ()=>{
     console.log(`server started at port ${port}` )
 })
