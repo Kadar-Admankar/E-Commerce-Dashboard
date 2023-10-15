@@ -4,6 +4,7 @@ require('./db/config.js')
 const cors = require('cors')
 const express = require('express')
 const User = require('./db/User.js')
+const Product = require('./db/Product.js')
 const app = express()
 const port = process.env.port || 5000
 
@@ -33,7 +34,14 @@ app.post('/login', async (req, res)=>{
         res.send({ message: "Enter both fields" })
     }  
 })
-    
+
+app.post('/add-product', async (req, res)=>{
+    console.log(req.body)
+    let product  = new Product(req.body)
+    const result = await product.save()
+    res.send(result)
+})
+
 app.listen(port, ()=>{
     console.log(`server started at port ${port}` )
 })
