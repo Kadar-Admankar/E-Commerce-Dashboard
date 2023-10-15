@@ -42,6 +42,15 @@ app.post('/add-product', async (req, res)=>{
     res.send(result)
 })
 
+app.get('/products', async(req, res)=>{
+   let products = await Product.find()
+   if(products.length > 0){
+    res.send(products)
+   }else{
+    res.send({message: "No Products Found"})
+   }
+})
+
 app.listen(port, ()=>{
     console.log(`server started at port ${port}` )
 })
