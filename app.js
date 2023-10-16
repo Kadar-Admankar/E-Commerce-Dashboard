@@ -51,6 +51,12 @@ app.get('/products', async(req, res)=>{
    }
 })
 
+app.delete('/product/:id', async (req, res)=>{
+    console.log(req.params)
+    const result = await Product.deleteOne({'_id':req.params.id})
+    res.send(result)
+})
+
 app.listen(port, ()=>{
-    console.log(`server started at port ${port}` )
+    console.log(`server started at port ${port}`)
 })
