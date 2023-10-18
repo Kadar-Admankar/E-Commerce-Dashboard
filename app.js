@@ -74,6 +74,17 @@ app.put('/product/:id', async (req, res)=>{
         res.send(result)
 })
 
+app.get('/search/:key', async (req, res)=>{
+    let result = await Product.find({
+        "$or":[
+            { name:{ $regex:req.params.key } },
+            { company:{ $regex:req.params.key } },
+            { categoory:{ $regex:req.params.key } }
+        ]
+    })
+    res.send(result)
+})
+
 app.listen(port, ()=>{
     console.log(`server started at port ${port}`)
 })
