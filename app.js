@@ -5,6 +5,8 @@ const cors = require('cors')
 const express = require('express')
 const User = require('./db/User.js')
 const Product = require('./db/Product.js')
+const jwt = require('jsonwebtoken')
+const jwtKey = 'fhghshskl'
 const app = express()
 const port = process.env.port || 5000
 
@@ -18,7 +20,12 @@ app.post('/register', async (req, res)=>{
     result = result.toObject()
     console.log('result11', result)
     delete result.password
-   res.send(result)   // we can take response from postman by writing res.send(). other method is res.json()
+    jwt.sign( { result }, jwtKey, { expiresIn:'2h' }, (err, token)=>{
+        if(err){
+            res.send({message:'Something Went Wrong'})
+        }
+        res.send({ result, auth:token }) // we can take response from postman by writing res.send(). other method is res.json()
+    })
 })
 
 // Login
@@ -26,13 +33,18 @@ app.post('/login', async (req, res)=>{
     if(req.body.email && req.body.password){
         let user = await User.findOne(req.body).select('-password')
         if(user){
-            res.send(user)
+            jwt.sign({user}, jwtKey, { expiresIn:'2h' }, (err, token)=>{
+                if(err){
+                    res.send({ message: "Something Went Wrong" })
+                }
+                res.send( { user, auth:token } )
+            })
         }else{
             res.send({ message: "No User Found" })
         }
     }else{
         res.send({ message: "Enter both fields" })
-    }  
+    }
 })
 
 app.post('/add-product', async (req, res)=>{
